@@ -1,6 +1,6 @@
 ﻿namespace newProject.models
 {
-    public class model
+    public class Model
     {
         public int Id { get; set; }
         public string Mavzu { get; set; }
