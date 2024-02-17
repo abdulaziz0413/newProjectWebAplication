@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using newProject.models;
+using newProject.models.DTOs;
+using newProject.Services.IService;
 using Npgsql;
 
 namespace newProject.Controllers
@@ -11,102 +13,32 @@ namespace newProject.Controllers
     
     public class ProductsController : ControllerBase
     {
-
-        static string connString = "Server=localhost;Port=5432;Database=vs;User Id=postgres;Password=oktava;";
-        [HttpGet]
-        public List<Model> Read()
+        private readonly IProductService _prodSer
+            ;
+        public ProductsController(IProductService pr)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connString))
-            {
-                return connection.Query<Model>("select * from New;").ToList();
-            }
+            _prodSer = pr;
         }
         [HttpGet]
-        public List<Model> ReadByAge(int age)
+        public IEnumerable<Model> GetAll()
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connString))
-            {
-                return connection.Query<Model>("select * from new where age > @age;", new { Age = age }).ToList();
-            }
+            return _prodSer.GetAll();
         }
-
         [HttpPost]
-        public Model CreateDataWithDapper(Model viewModel)
+        public string Create(ModelDTO shopDTO)
         {
-            string sql = "INSERT INTO new (mavzu, age) VALUES (@mavzu, @age);";
-
-            using (NpgsqlConnection connection = new NpgsqlConnection(connString))
-            {
-                connection.Execute(sql, new Model
-                {
-                    Mavzu = viewModel.Mavzu,
-                    age = viewModel.age,
-                });
-
-                return viewModel;
-            }
+            return _prodSer.Create(shopDTO);
         }
         [HttpPut]
-        public Model UpdateDataWithDapper(int id, Model viewModel)
+        public string Update(int id, ModelDTO shopDTO)
         {
-            string sql = $"update new set mavzu = @mavzu, age = @age where id = {id}";
-
-            using (NpgsqlConnection connection = new NpgsqlConnection(connString))
-            {
-                connection.Execute(sql, new Model
-                {
-                    Mavzu = viewModel.Mavzu,
-                    age = viewModel.age,
-
-                });
-
-                return viewModel;
-            }
+            return _prodSer.Update(id, shopDTO);
         }
         [HttpDelete]
-        public int DeleteDataWithDapper(int id)
+        public string Delete(int id)
         {
-            string sql = $"Delete from new where id = @id";
-
-            using (NpgsqlConnection connection = new NpgsqlConnection(connString))
-            {
-                var x = connection.Execute(sql, new { Id = id });
-
-                return x;
-            }
+            return _prodSer.Delete(id);
         }
-
-
-        //pastdagisi read ADO.NET da
-
-        /*public List<model> Get()
-        {
-           *//* using (NpgsqlConnection connection = new NpgsqlConnection(connString))
-            {
-                string query = $"select * from new;";
-                connection.Open();
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-
-                var x = command.ExecuteReader();
-
-                List<model> list = new List<model>();
-
-
-                while (x.Read())
-                {
-                    list.Add(new model()
-                    {
-                        Id = (int)x[0],
-                        Mavzu = (string)x[1],
-                        age = (int)x[2]
-                    });
-
-                }
-
-                return list;
-                connection.Close();*//*
-
-            }*/
     }
 
 

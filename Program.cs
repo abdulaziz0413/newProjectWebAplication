@@ -1,4 +1,9 @@
 
+using newProject.Repository.IRepositoryPattern;
+using newProject.Repository.RepositoyPattern;
+using newProject.Services.IService;
+using newProject.Services.Service;
+
 namespace newProject
 {
     public class Program
@@ -13,6 +18,10 @@ namespace newProject
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IModelCRUD, ModelCRUD>();
+            builder.Services.AddScoped<IShopCRUD, ShopCRUD>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IShopService, ShopService>();
 
             var app = builder.Build();
 
