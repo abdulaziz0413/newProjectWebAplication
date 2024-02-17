@@ -20,11 +20,12 @@ namespace newProject.Repository.RepositoyPattern
             {
                 using (NpgsqlConnection connection = new NpgsqlConnection(_conStr.GetConnectionString("Default")))
                 {
-                    string sql = "INSERT INTO new (mavzu, age) VALUES (@Mavzu, @age);";
+                    string sql = "INSERT INTO products (mavzu, age,shop_id) VALUES (@Mavzu, @age,@Shop_id);";
                     connection.Execute(sql, new Model
                     {
                         Mavzu = model.Mavzu,
                         age = model.age,
+                        Shop_id = model.Shop_id
                     });
 
                     return "Successfully";
@@ -43,7 +44,7 @@ namespace newProject.Repository.RepositoyPattern
 
                 using (NpgsqlConnection connection = new NpgsqlConnection(_conStr.GetConnectionString("Default")))
                 {
-                    string sql = $"Delete from new where id = @ids";
+                    string sql = $"Delete from products where id = @ids";
                     var x = connection.Execute(sql, new { ids = id });
 
                     return "Successfully";
@@ -61,7 +62,7 @@ namespace newProject.Repository.RepositoyPattern
             {
                 try
                 {
-                    IEnumerable<Model>? result = connection.Query<Model>("select * from New;");
+                    IEnumerable<Model>? result = connection.Query<Model>("select * from products;");
                     return result;
                 }
                 catch
@@ -77,11 +78,12 @@ namespace newProject.Repository.RepositoyPattern
             {
                 using (NpgsqlConnection connection = new NpgsqlConnection(_conStr.GetConnectionString("Default")))
                 {
-                    string sql = $"update new set mavzu = @Mavzu, age = @age where id = @ids";
+                    string sql = $"update products set mavzu = @Mavzu, age = @age,shop_id = @Shop_id where id = @ids";
                     connection.Execute(sql, new
                     {
                         Mavzu = model.Mavzu,
                         age = model.age,
+                        Shop_id = model.Shop_id,
                         ids = id
 
                     });
